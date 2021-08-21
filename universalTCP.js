@@ -1,7 +1,6 @@
-const ws2sHost = "wss://ws2s.feling.net/"; //We need a ws2s server. See https://github.com/playay/ws2s
-
-function welnetTCP(host, port, data, msgCallback, closeCallback)
+function welnetTCP(host, port, data, msgCallback, closeCallback, ws2sServer)
 {
+	let ws2sHost = typeof ws2sServer !== "string" || !ws2sServer ? ws2sServer : "wss://ws2s.feling.net/"; //We need a ws2s server. See https://github.com/playay/ws2s
 	let socket = new WebSocket(ws2sHost)
 	socket.onmessage = msgCallback;
 	socket.onopen = function()
@@ -16,5 +15,5 @@ function welnetTCP(host, port, data, msgCallback, closeCallback)
 			"data": data
 		}));
 	};
-	socket.onclose = typeof closeCallback === "function" ? closeCallback : function(){};
+	socket.onclose = typeof closeCallback !== "function" || !closeCallback ? function(){} : closeCallback;
 };
